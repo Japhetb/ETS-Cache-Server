@@ -1,5 +1,5 @@
 
-### 🧠 Elixir ETS Cache Server
+# 🧠 Elixir ETS Cache Server
 A simple in-memory caching service built with Elixir, using Erlang Term Storage (ETS) for fast key-value storage.
 
 ## 🚀 Features
@@ -22,18 +22,18 @@ Clone the project and fetch dependencies:
 Start an interactive shell:
   ```iex -S mix```
 
-# Store a value
+### Store a value
   ``` EtsCacheServer.add_to_cache("foo", "bar", 10000) ```
-# => :ok
+### => :ok
 
-# Retrieve it
+### Retrieve it
   ``` EtsCacheServer.fetch_from_cache("foo") ```
-# => {:ok, "bar"}
+### => {:ok, "bar"}
 
-# Fetch all
+### Fetch all
   ```EtsCacheServer.fetch_all_from_cache() ```
-# => {:ok, [{"foo", "bar", 1760899715505}]}
+### => {:ok, [{"foo", "bar", 1760899715505}]}
 
-# Wait ~2 seconds
+### Wait ~2 seconds
   ```CacheServer.get("temp")```
-# => {:error, :not_found}
+### => {:error, :not_found}
