@@ -2,6 +2,7 @@ defmodule CacheServer do
   use GenServer
 
   @table :ets_cache_table
+  @spec start_link(any()) :: :ignore | {:error, any()} | {:ok, pid()}
   def start_link(_) do
     GenServer.start_link(__MODULE__, %{}, name: __MODULE__)
   end
@@ -9,14 +10,15 @@ defmodule CacheServer do
   @doc """
   Put items into the cache.
   """
+  @spec put(any(), any(), atom() | non_neg_integer()) :: :ok
   def put(key, value, ttl \\ :infinity) do
     GenServer.cast(__MODULE__, {:put, key, value, ttl})
   end
 
-  @spec get(any()) :: :not_found | {:ok, any()}
   @doc """
   Get items from the cache.
   """
+  @spec get(any()) :: :not_found | {:ok, any()}
   def get(key) do
     case :ets.lookup(@table, key) do
       [{^key, value, expiry}] ->
@@ -61,7 +63,10 @@ defmodule CacheServer do
   def handle_info(:cleanup, state) do
     now = :erlang.system_time(:millisecond)
 
-    :ets.select_delete(@table, [{{:"$1", :"$2", :"$3"}, [{:"/=", :"$3", :infinity}, {:<, :"$3", now}], [true]}])
+    :ets.select_delete(@table, [
+      {{:"$1", :"$2", :"$3"}, [{:"/=", :"$3", :infinity}, {:<, :"$3", now}], [true]}
+    ])
+
     Process.send_after(self(), :cleanup, 60_000)
 
     {:noreply, state}
